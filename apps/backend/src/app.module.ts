@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import {join} from "path";
 import {DataSource} from "typeorm";
+import {Employee} from "./employee/employee.entity";
 
 @Module({
   imports: [ServeStaticModule.forRoot({
@@ -18,7 +19,7 @@ import {DataSource} from "typeorm";
     username: 'root',
     password: 'password',
     database: 'test',
-    entities: [],
+    entities: [Employee],
     synchronize: true,
   })],
   controllers: [AppController],
