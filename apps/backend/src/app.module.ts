@@ -24,7 +24,8 @@ import {TaskEntity} from "./task/task.entity";
     database: 'test',
     entities: [Employee, Manager,ReportEntity,TaskEntity],
     synchronize: true,
-  })],
+  }), TypeOrmModule.forFeature([Employee])
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
