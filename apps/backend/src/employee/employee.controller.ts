@@ -4,12 +4,15 @@ import {EmployeeService} from "./employee.service";
 
 @Controller()
 export class EmployeeController {
-    constructor(private readonly emloyeeService: EmployeeService) {}
+    constructor(private readonly employeeService: EmployeeService) {}
+
+    @Get('/employee')
+    getAllEmployees() {
+        return this.employeeService.getAllEmployees();
+    }
 
     @Get('/employee/:employeeId')
     getEmployeeTasks(@Param('employeeId') employeeId: string) {
-        return this.emloyeeService.getEmployeeTasks(employeeId);
+        return this.employeeService.getEmployeeTasks(employeeId);
     }
-
-
 }

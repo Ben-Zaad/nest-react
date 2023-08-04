@@ -10,6 +10,10 @@ export class EmployeeService {
         private employeeRepository: Repository<Employee>,
     ) {}
 
+    getAllEmployees(): Promise<Employee[]>{
+        return this.employeeRepository.find()
+    }
+
     getEmployeeTasks(employeeId) {
         return this.employeeRepository.find({where: {id: employeeId}})
     }
