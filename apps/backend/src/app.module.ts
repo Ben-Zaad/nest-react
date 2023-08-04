@@ -9,6 +9,7 @@ import {DataSource} from "typeorm";
 import {Employee} from "./employee/employee";
 import {Manager} from "./manager/manager";
 import {ReportEntity} from "./report/report.entity";
+import {TaskEntity} from "./task/task.entity";
 
 @Module({
   imports: [ServeStaticModule.forRoot({
@@ -21,7 +22,7 @@ import {ReportEntity} from "./report/report.entity";
     username: 'root',
     password: 'password',
     database: 'test',
-    entities: [Employee, Manager,ReportEntity],
+    entities: [Employee, Manager,ReportEntity,TaskEntity],
     synchronize: true,
   })],
   controllers: [AppController],

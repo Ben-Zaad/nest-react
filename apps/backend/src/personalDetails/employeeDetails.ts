@@ -2,6 +2,7 @@ import {Entity, Column, PrimaryGeneratedColumn, RelationOptions, ManyToOne, OneT
 import {Manager} from "../manager/manager";
 import {Employee} from "../employee/employee";
 import {ReportEntity} from "../report/report.entity";
+import {TaskEntity} from "../task/task.entity";
 
 @Entity()
 export abstract class EmployeeDetails {
@@ -28,4 +29,7 @@ export abstract class EmployeeDetails {
 
     @OneToMany(type => ReportEntity, report => report.employee)
     reports: Report[];
+
+    @OneToMany(type => ReportEntity, report => report.employee)
+    tasks: TaskEntity[];
 }

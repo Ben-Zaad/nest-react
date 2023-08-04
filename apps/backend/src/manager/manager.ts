@@ -2,6 +2,7 @@ import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany} from 'type
 import {Employee} from "../employee/employee";
 import {EmployeeDetails} from "../personalDetails/employeeDetails";
 import {ReportEntity} from "../report/report.entity";
+import {TaskEntity} from "../task/task.entity";
 
 @Entity()
 export class Manager extends EmployeeDetails {
@@ -13,4 +14,7 @@ export class Manager extends EmployeeDetails {
 
     @OneToMany(type => ReportEntity, report => report.manager)
     reports: Report[];
+
+    @OneToMany(type => ReportEntity, report => report.manager)
+    tasks: TaskEntity[];
 }
