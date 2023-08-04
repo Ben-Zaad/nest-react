@@ -10,6 +10,8 @@ import {Employee} from "./employee/employee";
 import {Manager} from "./manager/manager";
 import {ReportEntity} from "./report/report.entity";
 import {TaskEntity} from "./task/task.entity";
+import {EmployeeController} from "./employee/employee.controller";
+import {EmployeeModule} from "./employee/employee.module";
 
 @Module({
   imports: [ServeStaticModule.forRoot({
@@ -24,9 +26,11 @@ import {TaskEntity} from "./task/task.entity";
     database: 'test',
     entities: [Employee, Manager,ReportEntity,TaskEntity],
     synchronize: true,
-  }), TypeOrmModule.forFeature([Employee])
+    autoLoadEntities: true,
+  }), TypeOrmModule.forFeature([Employee]),
+    EmployeeModule
   ],
-  controllers: [AppController],
+  controllers: [AppController,EmployeeController],
   providers: [AppService],
 })
 
