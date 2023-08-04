@@ -5,7 +5,12 @@
   "scripts": {
     "dev": "turbo run dev"
   },
- "workspaces": [
-   "packages/*", "apps/*"
- ]
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "dependencies": {
+    "@nestjs/typeorm": "^10.0.0",
+    "typeorm": "^0.3.17"
+  }
 }
