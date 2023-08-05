@@ -73,11 +73,13 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
         }
     }
 
-    function markTaskDone(id: number | undefined) {
-        try{
-            axios.put(`/api/task/${id}`)
+    async function markTaskDone(id: number | undefined) {
+        try {
+            const task = await axios.put(`/api/task/${id}`)
+            console.log(task.data)
+            setTasks(task.data)
         } catch (e) {
-            console.error('Error marking task as done',e)
+            console.error('Error marking task as done', e)
         }
     }
 
@@ -141,7 +143,7 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                             <StyledTableData>{task?.text}</StyledTableData>
                             <StyledTableData>{formatDateToHumanReadable(task?.assignDate)}</StyledTableData>
                             <StyledTableData>{formatDateToHumanReadable(task?.dueDate)}</StyledTableData>
-                            <StyledTableData>{task?.isDone}</StyledTableData>
+                            <StyledTableData>{task?.isDone ? 'V' : 'X'}</StyledTableData>
                             <StyledTableData>
                                 <button onClick={() => markTaskDone(task?.id)}>Complete</button>
                                 <button onClick={() => deleteTask(task?.id)}>Remove Task</button>

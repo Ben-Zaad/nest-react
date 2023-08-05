@@ -51,9 +51,11 @@ export class EmployeeService {
 
     async markTaskDone(taskId){
         try {
-            const task = await this.taskRepository.findOne({where: {id: taskId}})
+            const task = await this.taskRepository.findOne({where: {id: taskId},relations:['employee']})
             task.isDone = true;
-            return this.taskRepository.save(task);
+            await this.taskRepository.save(task);
+            console.log('TASK',task)
+            return this.getEmployeeTasks(task.employee.id)
         } catch (e) {
             console.error(`Can't Change task #${taskId} status`, e)
         }
