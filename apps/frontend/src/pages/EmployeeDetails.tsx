@@ -1,7 +1,7 @@
 import React, {FC, useEffect} from 'react';
 import axios from "axios";
 import {formatDateToHumanReadable} from "./utils";
-import {CurvedContainer} from "../components/styledComponents";
+import {CurvedContainer, ScrollableContainer} from "../components/styledComponents";
 import styled from "styled-components";
 import {ModalWrapper} from "../components/ModalWrapper";
 import {CreateTask} from "../components/CreateTask";
@@ -67,124 +67,128 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
 
     function deleteTask(id: number | undefined) {
         try {
-            axios.delete(`/api/task/${id}`);
-        }catch (e) {
-            console.error('Error deleting',e)
+            const tasks = axios.delete(`/api/task/${id}`);
+            console.log('TASKS', tasks)
+
+        } catch (e) {
+            console.error('Error deleting', e)
         }
     }
 
     async function markTaskDone(id: number | undefined) {
         try {
-            const task = await axios.put(`/api/task/${id}`)
-            console.log(task.data)
-            setTasks(task.data)
+            const tasks = await axios.put(`/api/task/${id}`)
+            setTasks(tasks.data)
         } catch (e) {
             console.error('Error marking task as done', e)
         }
     }
 
     return (
-        <MainContainer>
-            <button onClick={onClose}>Close</button>
-            <RowContainer>
-                <StyledImage src={employee?.imageUrl} alt={`${employee.firstName} ${employee.lastName}`}
-                             className="employee-picture"/>
-                <EmployeeDetailContainer>
+        <ScrollableContainer>
+            <MainContainer>
+                <button onClick={onClose}>Close</button>
+                <RowContainer>
+                    <StyledImage src={employee?.imageUrl} alt={`${employee.firstName} ${employee.lastName}`}
+                                 className="employee-picture"/>
+                    <EmployeeDetailContainer>
+                        <table>
+                            <thead>
+                            <tr>
+                                <StyledTableHeader>First Name</StyledTableHeader>
+                                <StyledTableHeader>Last Name</StyledTableHeader>
+                                <StyledTableHeader>Position</StyledTableHeader>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <StyledTableData>{employee.firstName + ' '}</StyledTableData>
+                            <StyledTableData>{employee.lastName}</StyledTableData>
+                            <StyledTableData>{employee.position}</StyledTableData>
+                            </tbody>
+                        </table>
+                        {employee.manager && <>
+                          <div>
+                            <table>
+                              <thead>
+                              <tr>
+                                <StyledTableHeader>Manager Name</StyledTableHeader>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <StyledTableData>{employee.manager?.firstName + ' '}</StyledTableData>
+                              <StyledTableData>{employee.manager?.lastName}</StyledTableData>
+                              </tbody>
+                            </table>
+                            <button onClick={() => setOpenReports(!openReports)}>Report</button>
+                            <ModalWrapper openModal={openReports} setOpenModal={setOpenReports}><h1>REPORT</h1>
+                            </ModalWrapper>
+                          </div>
+                        </>}
+                    </EmployeeDetailContainer>
+                </RowContainer>
+                <div>
+                    <h2>Tasks</h2>
                     <table>
                         <thead>
                         <tr>
-                            <StyledTableHeader>First Name</StyledTableHeader>
-                            <StyledTableHeader>Last Name</StyledTableHeader>
-                            <StyledTableHeader>Position</StyledTableHeader>
+                            <StyledTableHeader>ID</StyledTableHeader>
+                            <StyledTableHeader>Text</StyledTableHeader>
+                            <StyledTableHeader>Assign Date</StyledTableHeader>
+                            <StyledTableHeader>Due Date</StyledTableHeader>
+                            <StyledTableHeader>Finished</StyledTableHeader>
                         </tr>
                         </thead>
                         <tbody>
-                        <StyledTableData>{employee.firstName + ' '}</StyledTableData>
-                        <StyledTableData>{employee.lastName}</StyledTableData>
-                        <StyledTableData>{employee.position}</StyledTableData>
+                        {tasks.map((task) => (
+                            <tr key={task.id}>
+                                <StyledTableData>{task?.id}</StyledTableData>
+                                <StyledTableData>{task?.text}</StyledTableData>
+                                <StyledTableData>{formatDateToHumanReadable(task?.assignDate)}</StyledTableData>
+                                <StyledTableData>{formatDateToHumanReadable(task?.dueDate)}</StyledTableData>
+                                <StyledTableData>{task?.isDone ? 'V' : 'X'}</StyledTableData>
+                                <StyledTableData>
+                                    <button onClick={() => markTaskDone(task?.id)}>Complete</button>
+                                    <button onClick={() => deleteTask(task?.id)}>Remove Task</button>
+                                    <ModalWrapper openModal={openCreateTask} setOpenModal={setOpenCreateTask}><h1>CREATE
+                                        TASK</h1>
+                                        <CreateTask
+                                            employeeId={employee?.id}
+                                            onCancel={() => setOpenCreateTask(false)}
+                                            onSave={createTask}
+                                        />
+                                    </ModalWrapper>
+                                </StyledTableData>
+                            </tr>
+                        ))}
+                        </tbody>
+                        <button onClick={() => setOpenCreateTask(!openCreateTask)}>New Task</button>
+                        <ModalWrapper openModal={openCreateTask} setOpenModal={setOpenCreateTask}>
+                            <CreateTask employeeId={employee.id} onSave={createTask}
+                                        onCancel={() => setOpenCreateTask(false)}/>
+                        </ModalWrapper>
+                    </table>
+                    <h2>Subordinates</h2>
+                    <table>
+                        <thead>
+                        <tr>
+                            <StyledTableHeader>ID</StyledTableHeader>
+                            <StyledTableHeader>First Name</StyledTableHeader>
+                            <StyledTableHeader>Last Name</StyledTableHeader>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {subordinates.map((task) => (
+                            <tr key={task.id}>
+                                <StyledTableData>{task?.id}</StyledTableData>
+                                <StyledTableData>{task?.firstName}</StyledTableData>
+                                <StyledTableData>{task?.lastName}</StyledTableData>
+                            </tr>
+                        ))}
                         </tbody>
                     </table>
-                    {employee.manager && <>
-                      <div>
-                        <table>
-                          <thead>
-                          <tr>
-                            <StyledTableHeader>Manager Name</StyledTableHeader>
-                          </tr>
-                          </thead>
-                          <tbody>
-                          <StyledTableData>{employee.manager?.firstName + ' '}</StyledTableData>
-                          <StyledTableData>{employee.manager?.lastName}</StyledTableData>
-                          </tbody>
-                        </table>
-                        <button onClick={() => setOpenReports(!openReports)}>Report</button>
-                        <ModalWrapper openModal={openReports} setOpenModal={setOpenReports}><h1>REPORT</h1>
-                        </ModalWrapper>
-                      </div>
-                    </>}
-                </EmployeeDetailContainer>
-            </RowContainer>
-            <div>
-                <h2>Tasks</h2>
-                <table>
-                    <thead>
-                    <tr>
-                        <StyledTableHeader>ID</StyledTableHeader>
-                        <StyledTableHeader>Text</StyledTableHeader>
-                        <StyledTableHeader>Assign Date</StyledTableHeader>
-                        <StyledTableHeader>Due Date</StyledTableHeader>
-                        <StyledTableHeader>Finished</StyledTableHeader>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {tasks.map((task) => (
-                        <tr key={task.id}>
-                            <StyledTableData>{task?.id}</StyledTableData>
-                            <StyledTableData>{task?.text}</StyledTableData>
-                            <StyledTableData>{formatDateToHumanReadable(task?.assignDate)}</StyledTableData>
-                            <StyledTableData>{formatDateToHumanReadable(task?.dueDate)}</StyledTableData>
-                            <StyledTableData>{task?.isDone ? 'V' : 'X'}</StyledTableData>
-                            <StyledTableData>
-                                <button onClick={() => markTaskDone(task?.id)}>Complete</button>
-                                <button onClick={() => deleteTask(task?.id)}>Remove Task</button>
-                                <ModalWrapper openModal={openCreateTask} setOpenModal={setOpenCreateTask}><h1>CREATE TASK</h1>
-                                    <CreateTask
-                                        employeeId={employee?.id}
-                                        onCancel={() => setOpenCreateTask(false)}
-                                        onSave={createTask}
-                                    />
-                                </ModalWrapper>
-                            </StyledTableData>
-                        </tr>
-                    ))}
-                    </tbody>
-                    <button onClick={() => setOpenCreateTask(!openCreateTask)}>New Task</button>
-                    <ModalWrapper openModal={openCreateTask} setOpenModal={setOpenCreateTask}>
-                        <CreateTask employeeId={employee.id} onSave={createTask}
-                                    onCancel={() => setOpenCreateTask(false)}/>
-                    </ModalWrapper>
-                </table>
-                <h2>Subordinates</h2>
-                <table>
-                    <thead>
-                    <tr>
-                        <StyledTableHeader>ID</StyledTableHeader>
-                        <StyledTableHeader>First Name</StyledTableHeader>
-                        <StyledTableHeader>Last Name</StyledTableHeader>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {subordinates.map((task) => (
-                        <tr key={task.id}>
-                            <StyledTableData>{task?.id}</StyledTableData>
-                            <StyledTableData>{task?.firstName}</StyledTableData>
-                            <StyledTableData>{task?.lastName}</StyledTableData>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            </div>
-        </MainContainer>
+                </div>
+            </MainContainer>
+        </ScrollableContainer>
     );
 };
 
@@ -214,6 +218,5 @@ const RowContainer = styled.div`
 const MainContainer = styled(CurvedContainer)`
   justify-content: space-around;
 `
-
 
 export default EmployeeDetail;

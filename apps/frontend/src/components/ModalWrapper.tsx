@@ -40,7 +40,7 @@ export const ModalWrapper: FC<ModalWrapperProps> = (
                 open={openModal}
                 onClose={handleClose}
             >
-                <Box sx={{...style, width: 800}}>
+                <Box sx={{...style, width: '40%', height: '90%'}}>
                     {children}
                 </Box>
             </Modal>

@@ -54,7 +54,6 @@ export class EmployeeService {
             const task = await this.taskRepository.findOne({where: {id: taskId},relations:['employee']})
             task.isDone = true;
             await this.taskRepository.save(task);
-            console.log('TASK',task)
             return this.getEmployeeTasks(task.employee.id)
         } catch (e) {
             console.error(`Can't Change task #${taskId} status`, e)
@@ -63,8 +62,9 @@ export class EmployeeService {
 
     async deleteTask(taskId) {
         try {
-            const task = await this.taskRepository.findOne({where: {id: taskId}})
-            return this.taskRepository.remove(task)
+            const task = await this.taskRepository.findOne({where: {id: taskId},relations:['employee']})
+            await this.taskRepository.remove(task)
+            return this.getEmployeeTasks(task.employee.id)
         } catch (e) {
             console.error(`Can't Delete task #${taskId}`, e)
         }
