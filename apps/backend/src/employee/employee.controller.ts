@@ -1,10 +1,11 @@
-import {Controller, Get, Param, Post} from '@nestjs/common';
-import {Employee} from "./employee";
+import {Body, Controller, Get, Param, Post} from '@nestjs/common';
 import {EmployeeService} from "./employee.service";
+import {TaskEntity} from "../task/task.entity";
 
 @Controller()
 export class EmployeeController {
-    constructor(private readonly employeeService: EmployeeService) {}
+    constructor(private readonly employeeService: EmployeeService) {
+    }
 
     @Get('/employee')
     getAllEmployees() {
@@ -24,5 +25,11 @@ export class EmployeeController {
     @Get('/employee/:employeeId/manager')
     getEmployeeManager(@Param('employeeId') employeeId: string) {
         return this.employeeService.getEmployeeManager(employeeId);
+    }
+
+    @Post('employee/:employeeId/newTask')
+    createTask(@Param('employeeId') employeeId: string, @Body() task: Partial<TaskEntity>,
+    ) {
+        return this.employeeService.createTask({employeeId, dueDate: task.dueDate, text: task.text});
     }
 }

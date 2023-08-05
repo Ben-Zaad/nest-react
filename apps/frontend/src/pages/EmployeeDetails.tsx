@@ -33,6 +33,7 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
     const [tasks, setTasks] = React.useState<Task[]>([]);
     const [subordinates, setSubordinates] = React.useState<Employee[]>([]);
     const [openReports, setOpenReports] = React.useState(false);
+    const [openCreateTask, setOpenCreateTask] = React.useState(false);
 
     useEffect(() => {
         fetchEmployeeData();
@@ -96,11 +97,12 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                 <table>
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Text</th>
-                        <th>Assign Date</th>
-                        <th>Due Date</th>
-                        <th>Finished</th>
+                        <StyledTableHeader>ID</StyledTableHeader>
+                        <StyledTableHeader>Text</StyledTableHeader>
+                        <StyledTableHeader>Assign Date</StyledTableHeader>
+                        <StyledTableHeader>Due Date</StyledTableHeader>
+                        <StyledTableHeader>Finished</StyledTableHeader>
+                        <StyledTableHeader>Create</StyledTableHeader>
                     </tr>
                     </thead>
                     <tbody>
@@ -114,7 +116,10 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                         </tr>
                     ))}
                     </tbody>
-
+                    <button onClick={() => setOpenCreateTask(!openCreateTask)}>New Task</button>
+                    <ModalWrapper openModal={openCreateTask} setOpenModal={setOpenCreateTask}>
+                        <h3>New Task</h3>
+                    </ModalWrapper>
                     <h2>Subordinates</h2>
                     <tbody>
                     {subordinates.map((task) => (
@@ -134,6 +139,10 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
 const StyledImage = styled.img`
   max-width: 500px;
   max-height: 500px;
+`
+
+const StyledTableHeader = styled.th`
+  padding: 1rem;
 `
 
 const EmployeeDetailContainer = styled.div`

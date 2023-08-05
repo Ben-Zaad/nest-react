@@ -18,6 +18,10 @@ export class EmployeeService {
         return this.employeeRepository.find({relations: ['manager']})
     }
 
+    getEmployeeById(employeeId): Promise<Employee> {
+        return this.employeeRepository.findOne({where: {id: employeeId} ,relations: ['manager']})
+    }
+
     getEmployeeTasks(employeeId) {
         return this.taskRepository.find({where: {employee: {id: employeeId}}})
     }
@@ -28,6 +32,19 @@ export class EmployeeService {
 
     getEmployeeManager(employeeId) {
         return this.employeeRepository.find({where: {id: employeeId}, relations: ['manager']})
+    }
+
+    async createTask({employeeId, dueDate, text}) {
+        try {
+            const employee = await this.getEmployeeById(employeeId)
+            const newTask = this.taskRepository.create()
+            console.log('NEW TASK', newTask)
+            newTask.employee = employee;
+            newTask.dueDate = dueDate;
+            newTask.text = text;
+        } catch (e) {
+
+        }
     }
 
     createEmployee(employee: Employee) {
