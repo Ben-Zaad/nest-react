@@ -65,6 +65,14 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
     }
 
 
+    function deleteTask(id: number | undefined) {
+        try {
+            axios.delete(`/api/task/${id}`);
+        }catch (e) {
+            console.error('Error deleting',e)
+        }
+    }
+
     return (
         <MainContainer>
             <button onClick={onClose}>Close</button>
@@ -126,6 +134,16 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                             <StyledTableData>{formatDateToHumanReadable(task?.assignDate)}</StyledTableData>
                             <StyledTableData>{formatDateToHumanReadable(task?.dueDate)}</StyledTableData>
                             <StyledTableData>{task?.isDone}</StyledTableData>
+                            <StyledTableData>
+                                <button onClick={() => deleteTask(task?.id)}>Remove Task</button>
+                                <ModalWrapper openModal={openCreateTask} setOpenModal={setOpenCreateTask}><h1>CREATE TASK</h1>
+                                    <CreateTask
+                                        employeeId={employee?.id}
+                                        onCancel={() => setOpenCreateTask(false)}
+                                        onSave={createTask}
+                                    />
+                                </ModalWrapper>
+                            </StyledTableData>
                         </tr>
                     ))}
                     </tbody>

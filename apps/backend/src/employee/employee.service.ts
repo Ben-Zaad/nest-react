@@ -19,7 +19,7 @@ export class EmployeeService {
     }
 
     getEmployeeById(employeeId): Promise<Employee> {
-        return this.employeeRepository.findOne({where: {id: employeeId} ,relations: ['manager']})
+        return this.employeeRepository.findOne({where: {id: employeeId}, relations: ['manager']})
     }
 
     getEmployeeTasks(employeeId) {
@@ -46,6 +46,15 @@ export class EmployeeService {
             return this.taskRepository.save(newTask)
         } catch (e) {
 
+        }
+    }
+
+    async deleteTask(taskId) {
+        try {
+            const task = await this.taskRepository.findOne({where: {id: taskId}})
+            return this.taskRepository.remove(task)
+        } catch (e) {
+            console.error(`Can't Delete task #${taskId}`, e)
         }
     }
 

@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post} from '@nestjs/common';
 import {EmployeeService} from "./employee.service";
 import {TaskEntity} from "../task/task.entity";
 
@@ -31,5 +31,10 @@ export class EmployeeController {
     createTask(@Param('employeeId') employeeId: string, @Body() task: Partial<TaskEntity>,
     ) {
         return this.employeeService.createTask({employeeId, dueDate: task.dueDate, text: task.text});
+    }
+
+    @Delete('task/:taskId')
+    deleteTask(@Param('taskId') taskId: string) {
+        return this.employeeService.deleteTask(taskId);
     }
 }
