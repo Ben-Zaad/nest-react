@@ -47,6 +47,6 @@ export class EmployeeController {
     @Post('employee/:employeeId/newReport')
     createReport(@Param('employeeId') employeeId: string, @Body() report: Partial<ReportEntity>,
     ) {
-        return this.employeeService.createEmployeeReport({employeeId, text: report.text});
+        return this.employeeService.createEmployeeReport({employeeId, text: report.text, status: report.status});
     }
 }

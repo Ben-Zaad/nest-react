@@ -18,17 +18,17 @@ export const Dropdown: React.FC<DropdownProps> =
             setValue(event.target.value as string);
         };
 
-        console.log('VALUE',value)
+        console.log('label',label)
+        console.log('value',value)
 
         return (
-            <Box sx={{minWidth: 120}}>
+            <Box sx={{width: '10rem'}}>
                 <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                    <InputLabel id="demo-simple-select-label">{label}</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={''}
-                        label={label}
                         onChange={handleChange}
                     >
                         <MenuItem value={"Pending"}>Pending</MenuItem>

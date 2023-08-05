@@ -74,13 +74,14 @@ export class EmployeeService {
     }
 
 
-    async createEmployeeReport({employeeId, text}) {
+    async createEmployeeReport({employeeId, text, status}) {
         try {
             const employee = await this.getEmployeeById(employeeId)
             const newReport = this.reportRepository.create()
             newReport.employee = employee;
             newReport.date = new Date();
             newReport.text = text;
+            newReport.status = status;
             return this.reportRepository.save(newReport)
         } catch (e) {
 
