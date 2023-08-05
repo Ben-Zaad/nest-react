@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import {join} from "path";
 import {DataSource} from "typeorm";
-import {EmployeeEntity} from "./employee/employee.entity";
+import {Employee} from "./employee/employee";
 import {Manager} from "./manager/manager";
 import {ReportEntity} from "./report/report.entity";
 import {TaskEntity} from "./task/task.entity";
@@ -24,10 +24,10 @@ import {EmployeeModule} from "./employee/employee.module";
     username: 'root',
     password: 'password',
     database: 'test',
-    entities: [EmployeeEntity, Manager,ReportEntity,TaskEntity],
+    entities: [Employee, Manager,ReportEntity,TaskEntity],
     synchronize: true,
     autoLoadEntities: true,
-  }), TypeOrmModule.forFeature([EmployeeEntity]),
+  }), TypeOrmModule.forFeature([Employee]),
     EmployeeModule
   ],
   controllers: [AppController,EmployeeController],

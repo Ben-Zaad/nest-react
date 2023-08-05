@@ -11,7 +11,7 @@ export class EmployeeController {
         return this.employeeService.getAllEmployees();
     }
 
-    @Get('/employee/:employeeId')
+    @Get('/employee/:employeeId/tasks')
     getEmployeeTasks(@Param('employeeId') employeeId: string) {
         return this.employeeService.getEmployeeTasks(employeeId);
     }

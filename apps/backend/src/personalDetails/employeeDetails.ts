@@ -1,6 +1,6 @@
 import {Entity, Column, PrimaryGeneratedColumn, RelationOptions, ManyToOne, OneToMany} from 'typeorm';
 import {Manager} from "../manager/manager";
-import {EmployeeEntity} from "../employee/employee.entity";
+import {Employee} from "../employee/employee";
 import {ReportEntity} from "../report/report.entity";
 import {TaskEntity} from "../task/task.entity";
 
@@ -26,6 +26,9 @@ export abstract class EmployeeDetails {
 
     @Column()
     phoneNumber: string;
+
+    @Column({nullable: true})
+    imageUrl: string;
 
     @OneToMany(type => ReportEntity, report => report.employee)
     reports: Report[];
