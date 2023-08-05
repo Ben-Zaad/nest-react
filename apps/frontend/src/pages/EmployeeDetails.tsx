@@ -73,6 +73,14 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
         }
     }
 
+    function markTaskDone(id: number | undefined) {
+        try{
+            axios.put(`/api/task/${id}`)
+        } catch (e) {
+            console.error('Error marking task as done',e)
+        }
+    }
+
     return (
         <MainContainer>
             <button onClick={onClose}>Close</button>
@@ -135,6 +143,7 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                             <StyledTableData>{formatDateToHumanReadable(task?.dueDate)}</StyledTableData>
                             <StyledTableData>{task?.isDone}</StyledTableData>
                             <StyledTableData>
+                                <button onClick={() => markTaskDone(task?.id)}>Complete</button>
                                 <button onClick={() => deleteTask(task?.id)}>Remove Task</button>
                                 <ModalWrapper openModal={openCreateTask} setOpenModal={setOpenCreateTask}><h1>CREATE TASK</h1>
                                     <CreateTask

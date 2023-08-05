@@ -49,6 +49,16 @@ export class EmployeeService {
         }
     }
 
+    async markTaskDone(taskId){
+        try {
+            const task = await this.taskRepository.findOne({where: {id: taskId}})
+            task.isDone = true;
+            return this.taskRepository.save(task);
+        } catch (e) {
+            console.error(`Can't Change task #${taskId} status`, e)
+        }
+    }
+
     async deleteTask(taskId) {
         try {
             const task = await this.taskRepository.findOne({where: {id: taskId}})
