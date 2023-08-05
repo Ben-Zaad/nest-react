@@ -3,7 +3,7 @@ import {Manager} from "../manager/manager";
 import {EmployeeDetails} from "../personalDetails/employeeDetails";
 
 @Entity()
-export class Employee extends EmployeeDetails{
+export class EmployeeEntity extends EmployeeDetails{
     @ManyToOne(type => Manager, manager => manager.employees)
     manager: Manager;
 }

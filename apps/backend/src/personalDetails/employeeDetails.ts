@@ -1,6 +1,6 @@
 import {Entity, Column, PrimaryGeneratedColumn, RelationOptions, ManyToOne, OneToMany} from 'typeorm';
 import {Manager} from "../manager/manager";
-import {Employee} from "../employee/employee";
+import {EmployeeEntity} from "../employee/employee.entity";
 import {ReportEntity} from "../report/report.entity";
 import {TaskEntity} from "../task/task.entity";
 

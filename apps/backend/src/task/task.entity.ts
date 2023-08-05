@@ -1,6 +1,6 @@
 import {Entity, Column, PrimaryGeneratedColumn, RelationOptions, ManyToOne, OneToOne, OneToMany} from 'typeorm';
 import {Manager} from "../manager/manager";
-import {Employee} from "../employee/employee";
+import {EmployeeEntity} from "../employee/employee.entity";
 
 @Entity()
 export class TaskEntity {
@@ -19,8 +19,8 @@ export class TaskEntity {
     @Column()
     dueDate: Date;
 
-    @ManyToOne( (type) => Employee, (employee) => employee.tasks, { onDelete: 'CASCADE'})
-    employee: Employee;
+    @ManyToOne( (type) => EmployeeEntity, (employee) => employee.tasks, { onDelete: 'CASCADE'})
+    employee: EmployeeEntity;
 
     @ManyToOne( (type) => Manager, (manager) => manager.tasks, { onDelete: 'CASCADE'})
     manager: Manager;
