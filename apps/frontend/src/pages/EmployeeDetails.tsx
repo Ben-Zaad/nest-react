@@ -167,13 +167,13 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                                         onCancel={() => setOpenCreateTask(false)}/>
                         </ModalWrapper>
                     </table>
-                    <h2>Subordinates</h2>
-                    <table>
+                    {subordinates.length > 0 && <><h2>Subordinates</h2>
+                      <table>
                         <thead>
                         <tr>
-                            <StyledTableHeader>ID</StyledTableHeader>
-                            <StyledTableHeader>First Name</StyledTableHeader>
-                            <StyledTableHeader>Last Name</StyledTableHeader>
+                          <StyledTableHeader>ID</StyledTableHeader>
+                          <StyledTableHeader>First Name</StyledTableHeader>
+                          <StyledTableHeader>Last Name</StyledTableHeader>
                         </tr>
                         </thead>
                         <tbody>
@@ -185,7 +185,8 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                             </tr>
                         ))}
                         </tbody>
-                    </table>
+                      </table>
+                    </>}
                 </div>
             </MainContainer>
         </ScrollableContainer>
