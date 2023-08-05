@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import EmployeeDetail from "./EmployeeDetails";
 import {NestedModal} from "../components/NestedModal";
@@ -14,7 +14,8 @@ export interface Employee {
 const EmployeeList: React.FC = () => {
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-    const [open, setOpen] = React.useState(false);
+    const [openModal, setOpenModal] = React.useState(false);
+    const [openChildModal, setOpenChildModal] = React.useState(false);
 
     useEffect(() => {
         fetchEmployeeData();
@@ -31,7 +32,7 @@ const EmployeeList: React.FC = () => {
 
     const handleDetailsClick = (employee: Employee) => {
         setSelectedEmployee(employee);
-        setOpen(true);
+        setOpenModal(true);
     };
 
     const handleClosePopup = () => {
@@ -66,7 +67,11 @@ const EmployeeList: React.FC = () => {
                 </tbody>
             </table>
             {selectedEmployee && (
-                <NestedModal open={open} setOpen={setOpen}><EmployeeDetail employee={selectedEmployee} onClose={handleClosePopup} /></NestedModal>
+                <NestedModal openModal={openModal} setOpenModal={setOpenModal} openChildModal={openChildModal}
+                             setOpenChildModal={setOpenChildModal}>
+                    <EmployeeDetail employee={selectedEmployee}
+                                    onClose={handleClosePopup}/>
+                </NestedModal>
             )}
         </div>
     );
@@ -81,7 +86,7 @@ const StyledTableData = styled.td`
 `
 
 const StyledTableHeader = styled.th`
-    padding: 1rem
+  padding: 1rem
 `
 
 export default EmployeeList;

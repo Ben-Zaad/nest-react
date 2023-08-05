@@ -11,25 +11,30 @@ export class EmployeeService {
         private employeeRepository: Repository<Employee>,
         @InjectRepository(TaskEntity)
         private taskRepository: Repository<TaskEntity>,
-    ) {}
+    ) {
+    }
 
-    getAllEmployees(): Promise<Employee[]>{
-        return this.employeeRepository.find()
+    getAllEmployees(): Promise<Employee[]> {
+        return this.employeeRepository.find({relations: ['manager']})
     }
 
     getEmployeeTasks(employeeId) {
-        return this.taskRepository.find({where: {employee: {id:employeeId}}})
+        return this.taskRepository.find({where: {employee: {id: employeeId}}})
     }
 
     getEmployeeSubordinates(employeeId) {
-        return this.employeeRepository.find({where: {manager: {id:employeeId}}})
+        return this.employeeRepository.find({where: {manager: {id: employeeId}}})
+    }
+
+    getEmployeeManager(employeeId) {
+        return this.employeeRepository.find({where: {id: employeeId}, relations: ['manager']})
     }
 
     createEmployee(employee: Employee) {
         return this.employeeRepository.save(employee);
     }
 
-    createEmploteeReport(employeeId, report){
+    createEmploteeReport(employeeId, report) {
 
     }
 }

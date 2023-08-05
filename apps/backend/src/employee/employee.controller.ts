@@ -20,4 +20,9 @@ export class EmployeeController {
     getEmployeeSubordinates(@Param('employeeId') employeeId: string) {
         return this.employeeService.getEmployeeSubordinates(employeeId);
     }
+
+    @Get('/employee/:employeeId/manager')
+    getEmployeeManager(@Param('employeeId') employeeId: string) {
+        return this.employeeService.getEmployeeManager(employeeId);
+    }
 }

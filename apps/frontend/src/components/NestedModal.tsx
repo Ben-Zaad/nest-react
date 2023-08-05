@@ -20,20 +20,24 @@ const style = {
     pb: 3,
 };
 
-function ChildModal() {
-    const [open, setOpen] = React.useState(false);
+interface ChildModalProps {
+    openModal: boolean;
+    setOpenModal: (open: boolean) => void;
+}
+
+const ChildModal: FC<ChildModalProps> = ({openModal, setOpenModal}) => {
     const handleOpen = () => {
-        setOpen(true);
+        setOpenModal(true);
     };
     const handleClose = () => {
-        setOpen(false);
+        setOpenModal(false);
     };
 
     return (
         <React.Fragment>
             <Button onClick={handleOpen}>Open Child Modal</Button>
             <Modal
-                open={open}
+                open={openModal}
                 onClose={handleClose}
                 aria-labelledby="child-modal-title"
                 aria-describedby="child-modal-description"
@@ -52,20 +56,28 @@ function ChildModal() {
 
 interface NestedModalProps {
     children: ReactNode;
-    open: boolean;
-    setOpen: (open: boolean) => void;
+    openModal: boolean;
+    setOpenModal: (open: boolean) => void;
+    openChildModal: boolean,
+    setOpenChildModal: (open: boolean) => void;
 }
 
-export const NestedModal: FC<NestedModalProps> = ({open, setOpen, children}) => {
-    // const [open, setOpen] = React.useState(false);
+export const NestedModal: FC<NestedModalProps> = (
+    {
+        openModal,
+        setOpenModal,
+        openChildModal,
+        setOpenChildModal,
+        children
+    }) => {
     const handleClose = () => {
-        setOpen(false);
+        setOpenModal(false);
     };
 
     return (
         <MainContainer>
             <Modal
-                open={open}
+                open={openModal}
                 onClose={handleClose}
                 aria-labelledby="parent-modal-title"
                 aria-describedby="parent-modal-description"
@@ -73,7 +85,7 @@ export const NestedModal: FC<NestedModalProps> = ({open, setOpen, children}) => 
                 <Box sx={{...style, width: 400}}>
                     <h2 id="parent-modal-title">Text in a modal</h2>
                     {children}
-                    <ChildModal/>
+                    <ChildModal openModal={openChildModal} setOpenModal={setOpenChildModal}/>
                 </Box>
             </Modal>
         </MainContainer>
@@ -81,5 +93,4 @@ export const NestedModal: FC<NestedModalProps> = ({open, setOpen, children}) => 
 }
 
 const MainContainer = styled(CurvedContainer)`
-  width: 100rem;
 `

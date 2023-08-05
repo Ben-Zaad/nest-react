@@ -9,7 +9,7 @@ interface Employee {
     firstName: string;
     lastName: string;
     position: string;
-    manager: string;
+    manager: Employee;
     imageUrl: string;
     tasks: Task[];
 }
@@ -28,8 +28,9 @@ interface Props {
 
 }
 
-const EmployeeDetail: FC<Props> = ({ employee, onClose }) => {
+const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
     const [tasks, setTasks] = React.useState<Task[]>([]);
+    const [subordinates, setSubordinates] = React.useState<Employee[]>([]);
 
     useEffect(() => {
         fetchEmployeeData();
@@ -37,9 +38,11 @@ const EmployeeDetail: FC<Props> = ({ employee, onClose }) => {
 
     const fetchEmployeeData = async () => {
         try {
-            const response = await axios.get(`/api/employee/${employee?.id}/tasks`);
-            console.log(response.data);
-            setTasks(response.data);
+            const tasks = await axios.get(`/api/employee/${employee?.id}/tasks`);
+            const subordinates = await axios.get(`/api/employee/${employee?.id}/subordinates`);
+            console.log(subordinates.data);
+            setTasks(tasks.data);
+            setSubordinates(subordinates.data);
         } catch (error) {
             console.error('Error fetching employee data:', error);
         }
@@ -49,18 +52,44 @@ const EmployeeDetail: FC<Props> = ({ employee, onClose }) => {
     return (
         <CurvedContainer>
             <button onClick={onClose}>Close</button>
-            <div className="employee-header">
-                <StyledImage src={employee?.imageUrl} alt={`${employee.firstName} ${employee.lastName}`} className="employee-picture" />
-                <div className="employee-info">
-                    <div className="employee-name">{`${employee.firstName} ${employee.lastName}`}</div>
-                    <div className="employee-position">{employee.position}</div>
-                    <div className="employee-manager">
-                        {employee.manager}
+            <RowContainer>
+                <StyledImage src={employee?.imageUrl} alt={`${employee.firstName} ${employee.lastName}`}
+                             className="employee-picture"/>
+                <EmployeeDetailContainer>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Position</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <td>{employee.firstName + ' '}</td>
+                        <td>{employee.lastName}</td>
+                        <td>{employee.position}</td>
+                        </tbody>
+                    </table>
+                    {employee.manager && <>
+                      <h3>Manager:</h3>
+                      <div className="employee-manager">
+                        <table>
+                          <thead>
+                          <tr>
+                            <th>Name</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <td>{employee.manager?.firstName + ' '}</td>
+                          <td>{employee.manager?.lastName}</td>
+                          </tbody>
+                        </table>
                         <button className="report-button">Report</button>
-                    </div>
-                </div>
-            </div>
-            <div className="tasks">
+                      </div>
+                    </>}
+                </EmployeeDetailContainer>
+            </RowContainer>
+            <div>
                 <h2>Tasks</h2>
                 <table>
                     <thead>
@@ -83,6 +112,17 @@ const EmployeeDetail: FC<Props> = ({ employee, onClose }) => {
                         </tr>
                     ))}
                     </tbody>
+
+                    <h2>Subordinates</h2>
+                    <tbody>
+                    {subordinates.map((task) => (
+                        <tr key={task.id}>
+                            <td>{task?.id}</td>
+                            <td>{task?.firstName}</td>
+                            <td>{task?.lastName}</td>
+                        </tr>
+                    ))}
+                    </tbody>
                 </table>
             </div>
         </CurvedContainer>
@@ -90,8 +130,19 @@ const EmployeeDetail: FC<Props> = ({ employee, onClose }) => {
 };
 
 const StyledImage = styled.img`
-    width: 300px;
-    height: 200px;
+  width: 300px;
+  height: 200px;
 `
+
+const EmployeeDetailContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const RowContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
 
 export default EmployeeDetail;
