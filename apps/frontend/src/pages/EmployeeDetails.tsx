@@ -160,7 +160,7 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
 };
 
 const StyledImage = styled.img`
-  max-width: 500px;
+  max-width: 400px;
   max-height: 500px;
 `
 

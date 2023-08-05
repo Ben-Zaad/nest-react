@@ -1,4 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
+import {TextField} from "@mui/material";
+import DateInput from "./StyledDateInput";
+import styled from "styled-components";
+import {Row} from "./styledComponents";
 
 interface CreateTaskProps {
     employeeId: number | undefined;
@@ -11,31 +15,43 @@ export const CreateTask: React.FC<CreateTaskProps> = ({ onSave, onCancel }) => {
     const [dueDate, setDueDate] = useState('');
 
     const handleSaveClick = () => {
-        // const newTask: Task = {
-        //     id: Date.now(),
-        //     text: taskText,
-        //     dueDate: new Date(dueDate),
-        //     creationDate: new Date(),
-        // };
-
         onSave(dueDate,taskText);
     };
 
     return (
         <div>
             <h2>Add New Task</h2>
-            <label>
+            <RowContainer>
+            <h4>
                 Task Text:
-                <input type="text" value={taskText} onChange={(e) => setTaskText(e.target.value)} />
-            </label>
+                <TextField
+                    style={{width: '30rem'}}
+                    required
+                    value={taskText}
+                    onChange={(e) => setTaskText(e.target.value)}
+                    id="outlined-required"
+                    label="Required"
+                    placeholder="Task Description"
+                />
+            </h4>
+            </RowContainer>
             <br />
-            <label>
+            <RowContainer>
+            <h4>
                 Due Date:
-                <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
-            </label>
+                <DateInput value={dueDate} onChange={(e) => {
+                    setDueDate(e)
+                }} />
+            </h4>
+            </RowContainer>
             <br />
             <button onClick={handleSaveClick}>Save</button>
             <button onClick={onCancel}>Cancel</button>
         </div>
     );
 };
+
+
+const RowContainer = styled(Row)`
+  justify-content: center;
+`
