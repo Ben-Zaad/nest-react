@@ -3,6 +3,7 @@ import {Employee} from "./employee";
 import {Repository} from "typeorm";
 import {Injectable} from "@nestjs/common";
 import {TaskEntity} from "../task/task.entity";
+import {ReportEntity} from "../report/report.entity";
 
 @Injectable()
 export class EmployeeService {
@@ -11,6 +12,8 @@ export class EmployeeService {
         private employeeRepository: Repository<Employee>,
         @InjectRepository(TaskEntity)
         private taskRepository: Repository<TaskEntity>,
+        @InjectRepository(ReportEntity)
+        private reportRepository: Repository<ReportEntity>,
     ) {
     }
 
@@ -70,11 +73,20 @@ export class EmployeeService {
         }
     }
 
+
+    async createEmployeeReport({employeeId, text}) {
+        try {
+            const employee = await this.getEmployeeById(employeeId)
+            const newReport = this.reportRepository.create()
+            newReport.employee = employee;
+            newReport.date = new Date();
+            newReport.text = text;
+            return this.reportRepository.save(newReport)
+        } catch (e) {
+
+        }
+    }
     createEmployee(employee: Employee) {
         return this.employeeRepository.save(employee);
-    }
-
-    createEmploteeReport(employeeId, report) {
-
     }
 }

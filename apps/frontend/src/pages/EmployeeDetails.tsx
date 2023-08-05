@@ -5,6 +5,7 @@ import {CurvedContainer, ScrollableContainer} from "../components/styledComponen
 import styled from "styled-components";
 import {ModalWrapper} from "../components/ModalWrapper";
 import {CreateTask} from "../components/CreateTask";
+import {CreateReport} from "../components/CreateReport";
 
 interface Employee {
     id: number;
@@ -75,6 +76,18 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
         }
     }
 
+    const createReport = async (text: string, status: string) => {
+        try {
+            await axios.post(`/api/employee/${employee?.id}/newReport`, {
+                text,
+                status
+            })
+            setOpenReports(false)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     async function markTaskDone(id: number | undefined) {
         try {
             const tasks = await axios.put(`/api/task/${id}`)
@@ -120,7 +133,8 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                               </tbody>
                             </table>
                             <button onClick={() => setOpenReports(!openReports)}>Report</button>
-                            <ModalWrapper openModal={openReports} setOpenModal={setOpenReports}><h1>REPORT</h1>
+                            <ModalWrapper openModal={openReports} setOpenModal={setOpenReports}>
+                              <CreateReport createReport={createReport} onCancel={() => setOpenReports(false)}/>
                             </ModalWrapper>
                           </div>
                         </>}
@@ -163,8 +177,8 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                         </tbody>
                         <button onClick={() => setOpenCreateTask(!openCreateTask)}>New Task</button>
                         <ModalWrapper openModal={openCreateTask} setOpenModal={setOpenCreateTask}>
-                            <CreateTask employeeId={employee.id} onSave={createTask}
-                                        onCancel={() => setOpenCreateTask(false)}/>
+                            <CreateTask employeeId={employee.id} onSave={createReport}
+                                        onCancel={() => setOpenReports(false)}/>
                         </ModalWrapper>
                     </table>
                     {subordinates.length > 0 && <><h2>Subordinates</h2>
