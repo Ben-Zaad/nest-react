@@ -30,7 +30,7 @@ export class EmployeeService {
     }
 
     getEmployeeSubordinates(employeeId) {
-        return this.employeeRepository.find({where: {manager: {id: employeeId}}})
+        return this.employeeRepository.find({where: {manager: {id: employeeId}}, relations:['reports']})
     }
 
     getEmployeeManager(employeeId) {
@@ -73,6 +73,9 @@ export class EmployeeService {
         }
     }
 
+    getEmployeeReports(employeeId) {
+        return this.reportRepository.find({where: {employee: {id: employeeId}}})
+    }
 
     async createEmployeeReport({employeeId, text, status}) {
         try {

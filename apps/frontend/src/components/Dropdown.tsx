@@ -14,12 +14,8 @@ interface DropdownProps {
 export const Dropdown: React.FC<DropdownProps> =
     ({value, setValue, label}) => {
         const handleChange = (event: SelectChangeEvent) => {
-            console.log('EVENT',event)
             setValue(event.target.value as string);
         };
-
-        console.log('label',label)
-        console.log('value',value)
 
         return (
             <Box sx={{width: '10rem'}}>
@@ -28,7 +24,7 @@ export const Dropdown: React.FC<DropdownProps> =
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        value={''}
+                        value={value}
                         onChange={handleChange}
                     >
                         <MenuItem value={"Pending"}>Pending</MenuItem>

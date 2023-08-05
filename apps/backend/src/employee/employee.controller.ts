@@ -44,6 +44,10 @@ export class EmployeeController {
         return this.employeeService.deleteTask(taskId);
     }
 
+    @Get('/employee/:employeeId/reports')
+    getEmployeeReports(@Param('employeeId') employeeId: string) {
+        return this.employeeService.getEmployeeReports(employeeId);
+    }
     @Post('employee/:employeeId/newReport')
     createReport(@Param('employeeId') employeeId: string, @Body() report: Partial<ReportEntity>,
     ) {

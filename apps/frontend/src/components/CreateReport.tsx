@@ -19,7 +19,7 @@ export const CreateReport: React.FC<CreateReportProps> = ({createReport, onCance
     };
 
     return (
-        <div>
+        <MainContainer>
             <h2>Add New Report</h2>
             <RowContainer>
                 <h4>
@@ -39,10 +39,18 @@ export const CreateReport: React.FC<CreateReportProps> = ({createReport, onCance
             <Dropdown value={status} setValue={setStatus} label={'Status'}/>
             <button onClick={handleSaveClick}>Save</button>
             <button onClick={onCancel}>Cancel</button>
-        </div>
+        </MainContainer>
     );
 };
 
+
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`
 
 const RowContainer = styled(Row)`
   justify-content: center;

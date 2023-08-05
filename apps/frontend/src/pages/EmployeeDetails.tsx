@@ -1,7 +1,7 @@
 import React, {FC, useEffect} from 'react';
 import axios from "axios";
-import {formatDateToHumanReadable} from "./utils";
-import {CurvedContainer, ScrollableContainer} from "../components/styledComponents";
+import {flattenArrays, formatDateToHumanReadable} from "./utils";
+import {CurvedContainer, Row, ScrollableContainer} from "../components/styledComponents";
 import styled from "styled-components";
 import {ModalWrapper} from "../components/ModalWrapper";
 import {CreateTask} from "../components/CreateTask";
@@ -14,7 +14,8 @@ interface Employee {
     position: string;
     manager: Employee;
     imageUrl: string;
-    tasks: Task[];
+    tasks?: Task[];
+    reports?: Report[];
 }
 
 interface Task {
@@ -25,6 +26,15 @@ interface Task {
     text: string;
 }
 
+interface Report {
+    id: number;
+    date: string;
+    isDone: boolean;
+    text: string;
+
+    employeeName: string;
+}
+
 interface Props {
     employee: Partial<Employee>;
     onClose: () => void;
@@ -33,6 +43,7 @@ interface Props {
 
 const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
     const [tasks, setTasks] = React.useState<Task[]>([]);
+    const [reports, setReports] = React.useState<Report[][]>([]);
     const [subordinates, setSubordinates] = React.useState<Employee[]>([]);
     const [openReports, setOpenReports] = React.useState(false);
     const [openCreateTask, setOpenCreateTask] = React.useState(false);
@@ -46,7 +57,12 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
             const tasks = await axios.get(`/api/employee/${employee?.id}/tasks`);
             const subordinates = await axios.get(`/api/employee/${employee?.id}/subordinates`);
             setTasks(tasks.data);
-            setSubordinates(subordinates.data);
+            setReports(subordinates?.data?.map((subordinate: Employee) => {
+                return subordinate?.reports?.map(report=> {
+                    return {...report, employeeName: subordinate.firstName + ' ' + subordinate.lastName}
+                });
+            }));
+            setSubordinates(subordinates?.data);
         } catch (error) {
             console.error('Error fetching employee data:', error);
         }
@@ -66,11 +82,9 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
     }
 
 
-    function deleteTask(id: number | undefined) {
+    async function deleteTask(id: number | undefined) {
         try {
-            const tasks = axios.delete(`/api/task/${id}`);
-            console.log('TASKS', tasks)
-
+           await axios.delete(`/api/task/${id}`);
         } catch (e) {
             console.error('Error deleting', e)
         }
@@ -141,7 +155,7 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                     </EmployeeDetailContainer>
                 </RowContainer>
                 <div>
-                    <h2>Tasks</h2>
+                    <h3>Tasks</h3>
                     <table>
                         <thead>
                         <tr>
@@ -159,7 +173,7 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                                 <StyledTableData>{task?.text}</StyledTableData>
                                 <StyledTableData>{formatDateToHumanReadable(task?.assignDate)}</StyledTableData>
                                 <StyledTableData>{formatDateToHumanReadable(task?.dueDate)}</StyledTableData>
-                                <StyledTableData>{task?.isDone ? 'V' : 'X'}</StyledTableData>
+                                <StyledTableData>{task?.isDone ? 'Yes' : 'No'}</StyledTableData>
                                 <StyledTableData>
                                     <button onClick={() => markTaskDone(task?.id)}>Complete</button>
                                     <button onClick={() => deleteTask(task?.id)}>Remove Task</button>
@@ -181,26 +195,53 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                                         onCancel={() => setOpenReports(false)}/>
                         </ModalWrapper>
                     </table>
-                    {subordinates.length > 0 && <><h2>Subordinates</h2>
-                      <table>
-                        <thead>
-                        <tr>
-                          <StyledTableHeader>ID</StyledTableHeader>
-                          <StyledTableHeader>First Name</StyledTableHeader>
-                          <StyledTableHeader>Last Name</StyledTableHeader>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {subordinates.map((task) => (
-                            <tr key={task.id}>
-                                <StyledTableData>{task?.id}</StyledTableData>
-                                <StyledTableData>{task?.firstName}</StyledTableData>
-                                <StyledTableData>{task?.lastName}</StyledTableData>
+                    <Row>
+                        {subordinates.length > 0 && <>
+                          <h3>Subordinates</h3>
+                          <table>
+                            <thead>
+                            <tr>
+                              <StyledTableHeader>ID</StyledTableHeader>
+                              <StyledTableHeader>First Name</StyledTableHeader>
+                              <StyledTableHeader>Last Name</StyledTableHeader>
                             </tr>
-                        ))}
-                        </tbody>
-                      </table>
-                    </>}
+                            </thead>
+                            <tbody>
+                            {subordinates.map((task) => (
+                                <tr key={task.id}>
+                                    <StyledTableData>{task?.id}</StyledTableData>
+                                    <StyledTableData>{task?.firstName}</StyledTableData>
+                                    <StyledTableData>{task?.lastName}</StyledTableData>
+                                </tr>
+                            ))}
+                            </tbody>
+                          </table>
+                        </>}
+                        {flattenArrays(reports).length > 0 && <>
+                          <h3>Reports</h3>
+                          <table>
+                            <thead>
+                            <tr>
+                              <StyledTableHeader>ID</StyledTableHeader>
+                              <StyledTableHeader>Employee Name</StyledTableHeader>
+                              <StyledTableHeader>Description</StyledTableHeader>
+                              <StyledTableHeader>Date</StyledTableHeader>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {flattenArrays(reports).map((report) => (
+                                <tr key={report.id}>
+                                    <StyledTableData>{report?.id}</StyledTableData>
+                                    <StyledTableData>{report?.employeeName}</StyledTableData>
+                                    <StyledTableData>{report?.text}</StyledTableData>
+                                    <StyledTableData>{formatDateToHumanReadable(report?.date)}</StyledTableData>
+                                </tr>
+                            ))}
+                            </tbody>
+                          </table>
+                        </>
+                        }
+                    </Row>
                 </div>
             </MainContainer>
         </ScrollableContainer>
