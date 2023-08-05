@@ -2,6 +2,7 @@ import React, {FC, useEffect} from 'react';
 import axios from "axios";
 import {formatDateToHumanReadable} from "./utils";
 import {CurvedContainer} from "../components/styledComponents";
+import styled from "styled-components";
 
 interface Employee {
     id: number;
@@ -49,7 +50,7 @@ const EmployeeDetail: FC<Props> = ({ employee, onClose }) => {
         <CurvedContainer>
             <button onClick={onClose}>Close</button>
             <div className="employee-header">
-                <img src={employee?.imageUrl} alt={`${employee.firstName} ${employee.lastName}`} className="employee-picture" />
+                <StyledImage src={employee?.imageUrl} alt={`${employee.firstName} ${employee.lastName}`} className="employee-picture" />
                 <div className="employee-info">
                     <div className="employee-name">{`${employee.firstName} ${employee.lastName}`}</div>
                     <div className="employee-position">{employee.position}</div>
@@ -87,5 +88,10 @@ const EmployeeDetail: FC<Props> = ({ employee, onClose }) => {
         </CurvedContainer>
     );
 };
+
+const StyledImage = styled.img`
+    width: 300px;
+    height: 200px;
+`
 
 export default EmployeeDetail;
