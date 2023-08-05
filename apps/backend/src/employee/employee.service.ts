@@ -38,10 +38,12 @@ export class EmployeeService {
         try {
             const employee = await this.getEmployeeById(employeeId)
             const newTask = this.taskRepository.create()
-            console.log('NEW TASK', newTask)
             newTask.employee = employee;
             newTask.dueDate = dueDate;
+            newTask.assignDate = new Date();
             newTask.text = text;
+            newTask.isDone = false;
+            return this.taskRepository.save(newTask)
         } catch (e) {
 
         }

@@ -4,6 +4,7 @@ import {formatDateToHumanReadable} from "./utils";
 import {CurvedContainer} from "../components/styledComponents";
 import styled from "styled-components";
 import {ModalWrapper} from "../components/ModalWrapper";
+import {CreateTask} from "../components/CreateTask";
 
 interface Employee {
     id: number;
@@ -50,6 +51,19 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
         }
     };
 
+    const createTask = async (dueDate: string, text: string) => {
+        try {
+            const newTask = await axios.post(`/api/employee/${employee?.id}/newTask`, {
+                dueDate,
+                text,
+            })
+            setOpenCreateTask(false)
+            setTasks([...tasks, newTask.data])
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
 
     return (
         <MainContainer>
@@ -61,15 +75,15 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                     <table>
                         <thead>
                         <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Position</th>
+                            <StyledTableHeader>First Name</StyledTableHeader>
+                            <StyledTableHeader>Last Name</StyledTableHeader>
+                            <StyledTableHeader>Position</StyledTableHeader>
                         </tr>
                         </thead>
                         <tbody>
-                        <td>{employee.firstName + ' '}</td>
-                        <td>{employee.lastName}</td>
-                        <td>{employee.position}</td>
+                        <StyledTableData>{employee.firstName + ' '}</StyledTableData>
+                        <StyledTableData>{employee.lastName}</StyledTableData>
+                        <StyledTableData>{employee.position}</StyledTableData>
                         </tbody>
                     </table>
                     {employee.manager && <>
@@ -77,12 +91,12 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                         <table>
                           <thead>
                           <tr>
-                            <th>Manager Name</th>
+                            <StyledTableHeader>Manager Name</StyledTableHeader>
                           </tr>
                           </thead>
                           <tbody>
-                          <td>{employee.manager?.firstName + ' '}</td>
-                          <td>{employee.manager?.lastName}</td>
+                          <StyledTableData>{employee.manager?.firstName + ' '}</StyledTableData>
+                          <StyledTableData>{employee.manager?.lastName}</StyledTableData>
                           </tbody>
                         </table>
                         <button onClick={() => setOpenReports(!openReports)}>Report</button>
@@ -102,31 +116,40 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                         <StyledTableHeader>Assign Date</StyledTableHeader>
                         <StyledTableHeader>Due Date</StyledTableHeader>
                         <StyledTableHeader>Finished</StyledTableHeader>
-                        <StyledTableHeader>Create</StyledTableHeader>
                     </tr>
                     </thead>
                     <tbody>
                     {tasks.map((task) => (
                         <tr key={task.id}>
-                            <td>{task?.id}</td>
-                            <td>{task?.text}</td>
-                            <td>{formatDateToHumanReadable(task?.assignDate)}</td>
-                            <td>{formatDateToHumanReadable(task?.dueDate)}</td>
-                            <td>{task?.isDone}</td>
+                            <StyledTableData>{task?.id}</StyledTableData>
+                            <StyledTableData>{task?.text}</StyledTableData>
+                            <StyledTableData>{formatDateToHumanReadable(task?.assignDate)}</StyledTableData>
+                            <StyledTableData>{formatDateToHumanReadable(task?.dueDate)}</StyledTableData>
+                            <StyledTableData>{task?.isDone}</StyledTableData>
                         </tr>
                     ))}
                     </tbody>
                     <button onClick={() => setOpenCreateTask(!openCreateTask)}>New Task</button>
                     <ModalWrapper openModal={openCreateTask} setOpenModal={setOpenCreateTask}>
-                        <h3>New Task</h3>
+                        <CreateTask employeeId={employee.id} onSave={createTask}
+                                    onCancel={() => setOpenCreateTask(false)}/>
                     </ModalWrapper>
-                    <h2>Subordinates</h2>
+                </table>
+                <h2>Subordinates</h2>
+                <table>
+                    <thead>
+                    <tr>
+                        <StyledTableHeader>ID</StyledTableHeader>
+                        <StyledTableHeader>First Name</StyledTableHeader>
+                        <StyledTableHeader>Last Name</StyledTableHeader>
+                    </tr>
+                    </thead>
                     <tbody>
                     {subordinates.map((task) => (
                         <tr key={task.id}>
-                            <td>{task?.id}</td>
-                            <td>{task?.firstName}</td>
-                            <td>{task?.lastName}</td>
+                            <StyledTableData>{task?.id}</StyledTableData>
+                            <StyledTableData>{task?.firstName}</StyledTableData>
+                            <StyledTableData>{task?.lastName}</StyledTableData>
                         </tr>
                     ))}
                     </tbody>
@@ -145,6 +168,11 @@ const StyledTableHeader = styled.th`
   padding: 1rem;
 `
 
+const StyledTableData = styled.td`
+  padding: 1rem;
+`
+
+
 const EmployeeDetailContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -155,9 +183,7 @@ const RowContainer = styled.div`
   flex-direction: row;
 `
 const MainContainer = styled(CurvedContainer)`
-  position: sticky;
-  width: fit-content;
-  overflow: hidden;
+  justify-content: space-around;
 `
 
 
