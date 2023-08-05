@@ -21,6 +21,10 @@ export class EmployeeService {
         return this.taskRepository.find({where: {employee: {id:employeeId}}})
     }
 
+    getEmployeeSubordinates(employeeId) {
+        return this.employeeRepository.find({where: {manager: {id:employeeId}}})
+    }
+
     createEmployee(employee: Employee) {
         return this.employeeRepository.save(employee);
     }
