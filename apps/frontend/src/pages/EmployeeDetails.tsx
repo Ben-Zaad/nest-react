@@ -3,6 +3,7 @@ import axios from "axios";
 import {formatDateToHumanReadable} from "./utils";
 import {CurvedContainer} from "../components/styledComponents";
 import styled from "styled-components";
+import {ModalWrapper} from "../components/ModalWrapper";
 
 interface Employee {
     id: number;
@@ -31,6 +32,7 @@ interface Props {
 const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
     const [tasks, setTasks] = React.useState<Task[]>([]);
     const [subordinates, setSubordinates] = React.useState<Employee[]>([]);
+    const [openReports, setOpenReports] = React.useState(false);
 
     useEffect(() => {
         fetchEmployeeData();
@@ -40,7 +42,6 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
         try {
             const tasks = await axios.get(`/api/employee/${employee?.id}/tasks`);
             const subordinates = await axios.get(`/api/employee/${employee?.id}/subordinates`);
-            console.log(subordinates.data);
             setTasks(tasks.data);
             setSubordinates(subordinates.data);
         } catch (error) {
@@ -50,7 +51,7 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
 
 
     return (
-        <CurvedContainer>
+        <MainContainer>
             <button onClick={onClose}>Close</button>
             <RowContainer>
                 <StyledImage src={employee?.imageUrl} alt={`${employee.firstName} ${employee.lastName}`}
@@ -71,12 +72,11 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                         </tbody>
                     </table>
                     {employee.manager && <>
-                      <h3>Manager:</h3>
-                      <div className="employee-manager">
+                      <div>
                         <table>
                           <thead>
                           <tr>
-                            <th>Name</th>
+                            <th>Manager Name</th>
                           </tr>
                           </thead>
                           <tbody>
@@ -84,7 +84,9 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                           <td>{employee.manager?.lastName}</td>
                           </tbody>
                         </table>
-                        <button className="report-button">Report</button>
+                        <button onClick={() => setOpenReports(!openReports)}>Report</button>
+                        <ModalWrapper openModal={openReports} setOpenModal={setOpenReports}><h1>REPORT</h1>
+                        </ModalWrapper>
                       </div>
                     </>}
                 </EmployeeDetailContainer>
@@ -125,13 +127,13 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                     </tbody>
                 </table>
             </div>
-        </CurvedContainer>
+        </MainContainer>
     );
 };
 
 const StyledImage = styled.img`
-  width: 300px;
-  height: 200px;
+  max-width: 500px;
+  max-height: 500px;
 `
 
 const EmployeeDetailContainer = styled.div`
@@ -142,6 +144,11 @@ const EmployeeDetailContainer = styled.div`
 const RowContainer = styled.div`
   display: flex;
   flex-direction: row;
+`
+const MainContainer = styled(CurvedContainer)`
+  position: sticky;
+  width: fit-content;
+  overflow: hidden;
 `
 
 

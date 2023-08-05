@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import EmployeeDetail from "./EmployeeDetails";
-import {NestedModal} from "../components/NestedModal";
+import {ModalWrapper} from "../components/ModalWrapper";
 import styled from "styled-components";
 
 export interface Employee {
@@ -15,7 +15,6 @@ const EmployeeList: React.FC = () => {
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
     const [openModal, setOpenModal] = React.useState(false);
-    const [openChildModal, setOpenChildModal] = React.useState(false);
 
     useEffect(() => {
         fetchEmployeeData();
@@ -67,11 +66,9 @@ const EmployeeList: React.FC = () => {
                 </tbody>
             </table>
             {selectedEmployee && (
-                <NestedModal openModal={openModal} setOpenModal={setOpenModal} openChildModal={openChildModal}
-                             setOpenChildModal={setOpenChildModal}>
-                    <EmployeeDetail employee={selectedEmployee}
-                                    onClose={handleClosePopup}/>
-                </NestedModal>
+                <ModalWrapper openModal={openModal} setOpenModal={setOpenModal}>
+                    <EmployeeDetail employee={selectedEmployee} onClose={handleClosePopup}/>
+                </ModalWrapper>
             )}
         </div>
     );
