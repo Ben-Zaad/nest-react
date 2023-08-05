@@ -3,6 +3,8 @@ import {FC, ReactNode} from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+import styled from "styled-components";
+import {CurvedContainer} from "./styledComponents";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -61,8 +63,7 @@ export const NestedModal: FC<NestedModalProps> = ({open, setOpen, children}) => 
     };
 
     return (
-        <div>
-            {/*<Button onClick={handleOpen}>Open modal</Button>*/}
+        <MainContainer>
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -75,6 +76,10 @@ export const NestedModal: FC<NestedModalProps> = ({open, setOpen, children}) => 
                     <ChildModal/>
                 </Box>
             </Modal>
-        </div>
+        </MainContainer>
     );
 }
+
+const MainContainer = styled(CurvedContainer)`
+  width: 100rem;
+`

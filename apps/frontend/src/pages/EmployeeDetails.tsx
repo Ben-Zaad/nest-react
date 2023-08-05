@@ -1,5 +1,7 @@
 import React, {FC, useEffect} from 'react';
 import axios from "axios";
+import {formatDateToHumanReadable} from "./utils";
+import {CurvedContainer} from "../components/styledComponents";
 
 interface Employee {
     id: number;
@@ -13,8 +15,10 @@ interface Employee {
 
 interface Task {
     id: number;
-    title: string;
-    description: string;
+    assignDate: string;
+    dueDate: string;
+    isDone: boolean;
+    text: string;
 }
 
 interface Props {
@@ -24,7 +28,7 @@ interface Props {
 }
 
 const EmployeeDetail: FC<Props> = ({ employee, onClose }) => {
-    const [tasks, setTasks] = React.useState<Employee[]>([]);
+    const [tasks, setTasks] = React.useState<Task[]>([]);
 
     useEffect(() => {
         fetchEmployeeData();
@@ -33,6 +37,7 @@ const EmployeeDetail: FC<Props> = ({ employee, onClose }) => {
     const fetchEmployeeData = async () => {
         try {
             const response = await axios.get(`/api/employee/${employee?.id}/tasks`);
+            console.log(response.data);
             setTasks(response.data);
         } catch (error) {
             console.error('Error fetching employee data:', error);
@@ -41,7 +46,7 @@ const EmployeeDetail: FC<Props> = ({ employee, onClose }) => {
 
 
     return (
-        <div>
+        <CurvedContainer>
             <button onClick={onClose}>Close</button>
             <div className="employee-header">
                 <img src={employee?.imageUrl} alt={`${employee.firstName} ${employee.lastName}`} className="employee-picture" />
@@ -60,22 +65,26 @@ const EmployeeDetail: FC<Props> = ({ employee, onClose }) => {
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Title</th>
-                        <th>Description</th>
+                        <th>Text</th>
+                        <th>Assign Date</th>
+                        <th>Due Date</th>
+                        <th>Finished</th>
                     </tr>
                     </thead>
                     <tbody>
                     {tasks.map((task) => (
                         <tr key={task.id}>
                             <td>{task?.id}</td>
-                            {/*<td>{task?.title}</td>*/}
-                            {/*<td>{task?.description}</td>*/}
+                            <td>{task?.text}</td>
+                            <td>{formatDateToHumanReadable(task?.assignDate)}</td>
+                            <td>{formatDateToHumanReadable(task?.dueDate)}</td>
+                            <td>{task?.isDone}</td>
                         </tr>
                     ))}
                     </tbody>
                 </table>
             </div>
-        </div>
+        </CurvedContainer>
     );
 };
 

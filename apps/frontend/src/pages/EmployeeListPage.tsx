@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import EmployeeDetail from "./EmployeeDetails";
 import {NestedModal} from "../components/NestedModal";
+import styled from "styled-components";
 
 export interface Employee {
     id: number;
@@ -43,23 +44,23 @@ const EmployeeList: React.FC = () => {
             <table>
                 <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Position</th>
-                    <th>Details</th>
+                    <StyledTableHeader>ID</StyledTableHeader>
+                    <StyledTableHeader>First Name</StyledTableHeader>
+                    <StyledTableHeader>Last Name</StyledTableHeader>
+                    <StyledTableHeader>Position</StyledTableHeader>
+                    <StyledTableHeader>Details</StyledTableHeader>
                 </tr>
                 </thead>
                 <tbody>
                 {employees.map((employee) => (
                     <tr key={employee.id}>
-                        <td>{employee.id}</td>
-                        <td>{employee.firstName}</td>
-                        <td>{employee.lastName}</td>
-                        <td>{employee.position}</td>
-                        <td>
-                            <button onClick={() => handleDetailsClick(employee)}>Details</button>
-                        </td>
+                        <StyledTableData>{employee.id}</StyledTableData>
+                        <StyledTableData>{employee.firstName}</StyledTableData>
+                        <StyledTableData>{employee.lastName}</StyledTableData>
+                        <StyledTableData>{employee.position}</StyledTableData>
+                        <StyledTableData>
+                            <Button onClick={() => handleDetailsClick(employee)}>View</Button>
+                        </StyledTableData>
                     </tr>
                 ))}
                 </tbody>
@@ -70,5 +71,17 @@ const EmployeeList: React.FC = () => {
         </div>
     );
 };
+
+const Button = styled.button`
+  background-color: cadetblue;
+`
+
+const StyledTableData = styled.td`
+  padding: 1rem
+`
+
+const StyledTableHeader = styled.th`
+    padding: 1rem
+`
 
 export default EmployeeList;
