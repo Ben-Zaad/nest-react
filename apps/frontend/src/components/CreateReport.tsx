@@ -49,7 +49,7 @@ const MainContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  //height: 100vh;
 `
 
 const RowContainer = styled(Row)`

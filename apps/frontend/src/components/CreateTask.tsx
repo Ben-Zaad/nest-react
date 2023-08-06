@@ -16,6 +16,7 @@ export const CreateTask: React.FC<CreateTaskProps> = ({ onSave, onCancel }) => {
 
     const handleSaveClick = () => {
         onSave(dueDate,taskText);
+        onCancel()
     };
 
     return (

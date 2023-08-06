@@ -22,13 +22,17 @@ interface ModalWrapperProps {
     children: ReactNode;
     openModal: boolean;
     setOpenModal: (open: boolean) => void;
+    minWidth?: string;
+    height?: string;
 }
 
 export const ModalWrapper: FC<ModalWrapperProps> = (
     {
         openModal,
         setOpenModal,
-        children
+        minWidth = '40%',
+        height = '90%',
+        children,
     }) => {
     const handleClose = () => {
         setOpenModal(false);
@@ -40,7 +44,7 @@ export const ModalWrapper: FC<ModalWrapperProps> = (
                 open={openModal}
                 onClose={handleClose}
             >
-                <Box sx={{...style, minWidth: '40%', height: '90%'}}>
+                <Box sx={{...style, minWidth, height}}>
                     {children}
                 </Box>
             </Modal>

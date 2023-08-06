@@ -147,7 +147,7 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                               </tbody>
                             </table>
                             <button onClick={() => setOpenReports(!openReports)}>Report</button>
-                            <ModalWrapper openModal={openReports} setOpenModal={setOpenReports}>
+                            <ModalWrapper height={"60%"} openModal={openReports} setOpenModal={setOpenReports}>
                               <CreateReport createReport={createReport} onCancel={() => setOpenReports(false)}/>
                             </ModalWrapper>
                           </div>
@@ -177,7 +177,7 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                                 <StyledTableData>
                                     <button onClick={() => markTaskDone(task?.id)}>Complete</button>
                                     <button onClick={() => deleteTask(task?.id)}>Remove Task</button>
-                                    <ModalWrapper openModal={openCreateTask} setOpenModal={setOpenCreateTask}><h1>CREATE
+                                    <ModalWrapper height={"60%"} openModal={openCreateTask} setOpenModal={setOpenCreateTask}><h1>CREATE
                                         TASK</h1>
                                         <CreateTask
                                             employeeId={employee?.id}
@@ -190,9 +190,9 @@ const EmployeeDetail: FC<Props> = ({employee, onClose}) => {
                         ))}
                         </tbody>
                         <button onClick={() => setOpenCreateTask(!openCreateTask)}>New Task</button>
-                        <ModalWrapper openModal={openCreateTask} setOpenModal={setOpenCreateTask}>
-                            <CreateTask employeeId={employee.id} onSave={createReport}
-                                        onCancel={() => setOpenReports(false)}/>
+                        <ModalWrapper height={"60%"} openModal={openCreateTask} setOpenModal={setOpenCreateTask}>
+                            <CreateTask employeeId={employee.id} onSave={createTask}
+                                        onCancel={() => setOpenCreateTask(false)}/>
                         </ModalWrapper>
                     </table>
                     <Row>
